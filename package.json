@@ -1,10 +1,11 @@
 {
   "name": "ksc-fe",
   "version": "0.0.1",
-  "description": "源静态资源优化",
+  "description": "静态资源优化",
   "main": "app.js",
   "dependencies": {
     "uglify-js": "*",
+    "yuicompressor": "*",
     "ndir": "~0.1.5"
   },
   "devDependencies": {},
