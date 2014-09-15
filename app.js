@@ -4,7 +4,7 @@ var fs = require('fs');
 var child_process = require('child_process');
 var exec = child_process.exec;
 
-var resourceDir = '../console/webapp/view/cdn';
+var resourceDir = '../console/fe-resource/view/cdn';
 // 引入js文件的指令正则
 var jsReg = /^\s*#set\s*\(\s*\$jsList\s*=\s*\[\s*"\s*([\/]?[\w-]+)([\/][.\w-]+)*\s*"\s*(,\s*"\s*([\/]?[\w-]+)([\/][.\w-]+)*\s*"\s*)*\s*\]\s*\)\s*$/i;
 var _jsReg = /\s*#set\s*\(\s*\$jsList\s*=\s*\[\s*"\s*([\/]?[\w-]+)([\/][.\w-]+)*\s*"\s*(,\s*"\s*([\/]?[\w-]+)([\/][.\w-]+)*\s*"\s*)*\s*\]\s*\)\s*/i;
@@ -13,8 +13,8 @@ var cssReg = /^\s*#set\s*\(\s*\$cssList\s*=\s*\[\s*"\s*([\/]?[\w-]+)([\/][.\w-]+
 // var contentReg = /"\s*([\/]?[\w-]+)([\/][.\w-]+)*\s*"\s*(,\s*"\s*([\/]?[\w-]+)([\/][.\w-]+)*\s*"\s*)*/i
 // velocity指令中的文件提取正则
 var fileReg = /([\/]?[\w-]+)([\/][.\w-]+)*/g
-var basePath = path.resolve('../console/webapp/resources/js') + '/';
-var output = path.resolve('../console/webapp/pkg') + '/'
+var basePath = path.resolve('../console/fe-resource/resources/js') + '/';
+var output = path.resolve('../console/fe-resource/pkg') + '/'
 
 // 遍历指定目录的文件
 ndir.walk(resourceDir, function onDir(dirpath, files) {
