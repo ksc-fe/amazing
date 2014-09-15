@@ -3,6 +3,7 @@ var path = require('path');
 var fs = require('fs');
 var child_process = require('child_process');
 var exec = child_process.exec;
+var uglifyjs = './node_modules/.bin/uglifyjs ';
 
 var resourceDir = '../console/fe-source/view/cdn';
 // 引入js文件的指令正则
@@ -54,8 +55,8 @@ function readLine( file ){
         // 为打包后的文件添加时间戳
         var t = new Date();
         var curOutput = output + t.getTime() + '.min.js'
-        var optimizeCommond = 'uglifyjs ' + absolutePaths.join(' ') +' -o ' + curOutput + ' -c -m';
-        console.log('Optimizing ' + fileList + ' ...')
+        var optimizeCommond = uglifyjs + absolutePaths.join(' ') +' -o ' + curOutput + ' -c -m';
+        console.log('Optimizing ' + fileList + ' ...');
 
         // 执行资源优化打包指令
         exec(optimizeCommond, function( err, stdout, stderr ){

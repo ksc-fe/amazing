@@ -4,6 +4,7 @@
   "description": "源静态资源优化",
   "main": "app.js",
   "dependencies": {
+    "uglify-js": "*",
     "ndir": "~0.1.5"
   },
   "devDependencies": {},
