@@ -17,11 +17,11 @@ var exec = child_process.exec;
 var uglifyjs = './node_modules/.bin/uglifyjs ';
 var resourceDir = '../console/fe-source/view/cdn';
 // 引入js文件的指令正则
-var jsReg = /\s*#set\s*\(\s*\$jsList\s*=\s*\[\s*"\s*([\/]?[.\w-]+)([\/][.\w-]+)*\s*"\s*(,\s*"\s*([\/]?[\w-]+)([\/][.\w-]+)*\s*"\s*)*\s*\]\s*\)\s*/i;
+var jsReg = /\s*#set\s*\(\s*\$jsList\s*=\s*\[\s*"\s*([\/]?[.\w-]+)([\/][.\w-]+)*\s*"\s*(,\s*"\s*([\/]?[.\w-]+)([\/][.\w-]+)*\s*"\s*)*\s*\]\s*\)\s*/i;
 // 引入css文件的指令正则
-var cssReg = /\s*#set\s*\(\s*\$cssList\s*=\s*\[\s*"\s*([\/]?[.\w-]+)([\/][.\w-]+)*\s*"\s*(,\s*"\s*([\/]?[\w-]+)([\/][.\w-]+)*\s*"\s*)*\s*\]\s*\)\s*/i;
+var cssReg = /\s*#set\s*\(\s*\$cssList\s*=\s*\[\s*"\s*([\/]?[.\w-]+)([\/][.\w-]+)*\s*"\s*(,\s*"\s*([\/]?[.\w-]+)([\/][.\w-]+)*\s*"\s*)*\s*\]\s*\)\s*/i;
 // velocity指令中的文件提取正则
-var fileReg = /([\/]?[\w-]+)([\/][.\w-]+)*/g
+var fileReg = /\s*([\/]?[.\w-]+)([\/][.\w-]+)*\s*/g
 var baseJsPath = path.resolve('../console/fe-source/resources/js') + '/';
 var baseCssPath = path.resolve('../console/fe-source/resources/css') + '/';
 var output = path.resolve('../console/fe-source/pkg') + '/'
@@ -53,7 +53,6 @@ function readLine( file ){
         if( originFileStr ) {
             fileType = 'js';
         }else if( originFileStr = curLineStr.match(cssReg) ){
-            console.log('cssSSSSSSS:')
             fileType = 'css';
         }else if(!originFileStr) {
             return;   

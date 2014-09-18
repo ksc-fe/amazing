@@ -7,7 +7,7 @@ var md5 = require('./tools').md5;
 
 var compressor = require('yuicompressor');
 
-var cssReg = /\s*#set\s*\(\s*\$cssList\s*=\s*\[\s*"\s*([\/]?[.\w-]+)([\/][.\w-]+)*\s*"\s*(,\s*"\s*([\/]?[\w-]+)([\/][.\w-]+)*\s*"\s*)*\s*\]\s*\)\s*/i;
+var cssReg = /\s*#set\s*\(\s*\$cssList\s*=\s*\[\s*"\s*([\/]?[.\w-]+)([\/][.\w-]+)*\s*"\s*(,\s*"\s*([\/]?[.\w-]+)([\/][.\w-]+)*\s*"\s*)*\s*\]\s*\)\s*/i;
 var basePath = path.resolve('../console/fe-source/pkg') + '/';
 var cssArr = [];
 
