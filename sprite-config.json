@@ -1,0 +1,35 @@
+{
+    "workspace": "../console/fe-source/pkg/",
+ 
+    "input": {
+ 
+        "cssSource": ["./**.css"],
+ 
+        // "ignoreImages": ["*logo.png"],
+ 
+        "format": "png"
+    },
+
+    "output": {
+ 
+        "cssDist": "./sprite/css/",
+ 
+        "imageDist": "./img/",
+ 
+        "maxSingleSize": 300,
+ 
+        "margin": 5,
+ 
+        "prefix": "sprite_",
+ 
+        "format": "png",
+ 
+        "combine": true,
+
+        "splitCss": true,
+ 
+        "combineCSSRule": false,
+ 
+        "compress": true
+    }
+}
