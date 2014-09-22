@@ -52,7 +52,7 @@ program
     .option('-s, --server', '启动web服务器')
     .option('-r, --root <path>', '指定web应用的加载路径', setRoot)
     .option('-p, --port <num>', '指定服务启动端口', setPort)
-    .option('-c, --copy', '复制资源路径', copySource)
+    .option('-c, --copy', '复制fe-source中的静态资源到webapp中', copySource)
     .parse(process.argv);
 
 if(program.server && ( program.root || program.port || ( !program.root && !program.port ) ) ) {
