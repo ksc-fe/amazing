@@ -25,9 +25,9 @@ var spriteConfig =
 
     "output": {
  
-        "cssDist": "./pkg/css/",
+        "cssDist": "./resources/pkg/c/",
  
-        "imageDist": "../../resources/images/sprite/",
+        "imageDist": "../i",
  
         "maxSingleSize": 300,
  
@@ -71,7 +71,7 @@ var packageCss = function( cssArr, file ) {
             spriteConfig.output.combine = md5Part + '.min.css'
 
             spriter.merge(spriteConfig, function(){
-                var _basePath = path.resolve('../console/fe-source/pkg/css') + '/';
+                var _basePath = path.resolve('../console/fe-source/resources/pkg/c') + '/';
                 var _output = _basePath + md5Part + '.min.css';
                 var originCont = data.toString();
                 var updateCont = originCont.replace(cssReg, '\r\n#set($cssList = ["' + _output + '"])\r\n');

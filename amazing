@@ -1,0 +1,47 @@
+#!/usr/bin/env node
+
+/**
+* Module dependencies.
+*/
+
+var child_process = require('child_process');
+
+var program = require('commander');
+
+var exec = child_process.exec;
+
+var base = './';
+var root = '../console/fe-source';
+var port = '9090';
+
+function setRoot( val ){
+    root = val;
+}
+
+function setPort( val ){
+    port = val;
+}
+
+function startServer(){
+    var startSerCommond = 'java -jar  ./libs/server.jar --base ' + base + '  --root ' + root + ' --port ' + port;
+    console.log('* Server is starting , port is ' + port);
+    var server = exec(startSerCommond, function( err, stdout, stderr ){
+        if(err) 
+            console.log('* 服务器启动失败！', err);
+            throw err;
+        console.log('* Congratulation, 服务器启动成功!');
+        console.log('* PID: ', server.pid)
+    })
+}
+
+program
+  .version('0.0.1')
+  .usage('[options] <file ...>')
+  .option('-s, --server', '启动web服务器')
+  .option('-r, --root <path>', '指定web应用的加载路径', setRoot)
+  .option('-p, --port <num>', '指定服务启动端口', setPort)
+  .parse(process.argv);
+
+if(program.server && ( program.root || program.port || ( !program.root && !program.port ) ) ) {
+    startServer();
+}

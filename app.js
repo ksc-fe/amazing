@@ -24,7 +24,7 @@ var cssReg = /\s*#set\s*\(\s*\$cssList\s*=\s*\[\s*"\s*([\/]?[.\w-]+)([\/][.\w-]+
 var fileReg = /\s*([\/]?[.\w-]+)([\/][.\w-]+)*\s*/g
 var baseJsPath = path.resolve('../console/fe-source/resources/js') + '/';
 var baseCssPath = path.resolve('../console/fe-source/resources/css') + '/';
-var output = path.resolve('../console/fe-source/pkg') + '/'
+var output = path.resolve('../console/fe-source/resources/pkg') + '/'
 
 // 遍历指定目录的文件
 ndir.walk(resourceDir, function onDir(dirpath, files) {
@@ -76,7 +76,7 @@ function readLine( file ){
 
         // 为打包后的文件添加时间戳
         var t = new Date();
-        var curOutput = output + t.getTime() + '.min.js'
+        var curOutput = output + 'j/' + t.getTime() + '.min.js'
         var optimizeCommond = uglifyjs + absolutePaths.join(' ') +' -o ' + curOutput + ' -c -m';
         console.log('Optimizing ' + fileList + ' ...');
 
@@ -89,7 +89,6 @@ function readLine( file ){
                 fs.readFile( curOutput,  function(err, data1) {
                     if(err) throw err;
                     var digest = crypto.createHash('md5').update(data1.toString()).digest('hex').slice(0, 10);
-                    console.log('***********md5: ', digest, 'time: ', t.getTime() , ', curOutput: ', curOutput);
                     newOutput = curOutput.replace( t.getTime()+'', digest );
 
                     fs.renameSync( curOutput, newOutput );
@@ -102,7 +101,7 @@ function readLine( file ){
                         if(err) throw err;
                         console.log('Write ' + file + ' success')
                     })
-                } )
+                })
                 
             })
         })
