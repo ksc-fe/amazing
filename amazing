@@ -5,8 +5,8 @@
 */
 
 var child_process = require('child_process');
-
 var program = require('commander');
+var tools = require('./tools');
 
 var exec = child_process.exec;
 
@@ -34,13 +34,26 @@ function startServer(){
     })
 }
 
+function copySource() {
+    console.log('开始复制css...');
+    tools.copy( '../console/fe-source/resources/css', '../console/webapp/resources/css' );
+    console.log('已经成功完成css的复制。')
+    console.log('开始复制js...');
+    tools.copy( '../console/fe-source/resources/js', '../console/webapp/resources/js' );
+    console.log('已经成功完成js的复制。')
+    console.log('开始复制图片...');
+    tools.copy( '../console/fe-source/resources/images', '../console/webapp/resources/images' );
+    console.log('已经成功完成图片的复制。')
+}
+
 program
-  .version('0.0.1')
-  .usage('[options] <file ...>')
-  .option('-s, --server', '启动web服务器')
-  .option('-r, --root <path>', '指定web应用的加载路径', setRoot)
-  .option('-p, --port <num>', '指定服务启动端口', setPort)
-  .parse(process.argv);
+    .version('0.0.1')
+    .usage('[options] <file ...>')
+    .option('-s, --server', '启动web服务器')
+    .option('-r, --root <path>', '指定web应用的加载路径', setRoot)
+    .option('-p, --port <num>', '指定服务启动端口', setPort)
+    .option('-c, --copy', '复制资源路径', copySource)
+    .parse(process.argv);
 
 if(program.server && ( program.root || program.port || ( !program.root && !program.port ) ) ) {
     startServer();
