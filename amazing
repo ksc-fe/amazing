@@ -44,6 +44,9 @@ function copySource() {
     console.log('开始复制图片...');
     tools.copy( '../console/fe-source/resources/images', '../console/webapp/resources/images' );
     console.log('已经成功完成图片的复制。')
+    console.log('开始复制模板...');
+    tools.copy( '../console/fe-source/view', '../console/webapp/view' );
+    console.log('已经成功完成模板的复制。')
 }
 
 program
