@@ -8,49 +8,12 @@ var spriter = require('ispriter');
 var compressor = require('yuicompressor');
 var ndir = require('ndir');
 var md5 = require('./tools').md5;
-// var spriteConfig = require('./sprite-config.json');
-
-var spriteConfig = 
-{
-    "workspace": "../console/fe-source",
- 
-    "input": {
- 
-        "cssSource": ["./resources/temp/**.css"],
- 
-        // "ignoreImages": ["*logo.png"],
- 
-        "format": "png"
-    },
-
-    "output": {
- 
-        "cssDist": "./resources/pkg/c/",
- 
-        "imageDist": "../i",
- 
-        "maxSingleSize": 300,
- 
-        "margin": 5,
- 
-        "prefix": "sprite_",
- 
-        "format": "png",
- 
-        "combine": true,
-
-        "splitCss": false,
- 
-        "combineCSSRule": false,
- 
-        "compress": true
-    }
-}
 
 var cssReg = /\s*#set\s*\(\s*\$cssList\s*=\s*\[\s*"\s*([\/]?[.\w-]+)([\/][.\w-]+)*\s*"\s*(,\s*"\s*([\/]?[.\w-]+)([\/][.\w-]+)*\s*"\s*)*\s*\]\s*\)\s*/i;
 var relativePath = /\/pkg\/.*/i;
 var basePath = path.resolve('../console/fe-source/resources') + '/';
 var cssArr = [];
+var spriteConfig = require('./sprite-config.json');
 
 var packageCss = function( cssArr, file ) {
     var md5Part = md5( cssArr.toString() ).slice(0, 10) 
@@ -75,7 +38,7 @@ var packageCss = function( cssArr, file ) {
                 var originCont = data.toString();
 
                 _output = _output.match( relativePath )[0].slice(1);
-                
+
                 var updateCont = originCont.replace(cssReg, '\r\n#set($cssList = ["' + _output + '"])\r\n');
 
                 var fileBuf = new Buffer(updateCont);
