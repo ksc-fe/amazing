@@ -48,16 +48,15 @@ var spriteConfig =
 }
 
 var cssReg = /\s*#set\s*\(\s*\$cssList\s*=\s*\[\s*"\s*([\/]?[.\w-]+)([\/][.\w-]+)*\s*"\s*(,\s*"\s*([\/]?[.\w-]+)([\/][.\w-]+)*\s*"\s*)*\s*\]\s*\)\s*/i;
+var relativePath = /\/pkg\/.*/i;
 var basePath = path.resolve('../console/fe-source/resources') + '/';
 var cssArr = [];
 
 var packageCss = function( cssArr, file ) {
     var md5Part = md5( cssArr.toString() ).slice(0, 10) 
     var output = basePath + 'temp/' + md5Part + '.min.css';
-    console.log('version number: ', md5Part);
 
     fs.exists(basePath + 'temp/', function (exists) {
-        console.log('*******************exists: ', exists)
         if( !exists ) {
             ndir.mkdir(basePath + 'temp/');
         }
@@ -68,12 +67,15 @@ var packageCss = function( cssArr, file ) {
         fs.writeFile(output, cssArr, function(err){
             if(err) throw err;
             console.log('Write ' + output + ' success!')
-            spriteConfig.output.combine = md5Part + '.min.css'
+            spriteConfig.output.combine = md5Part + '.min1.css'
 
             spriter.merge(spriteConfig, function(){
                 var _basePath = path.resolve('../console/fe-source/resources/pkg/c') + '/';
                 var _output = _basePath + md5Part + '.min.css';
                 var originCont = data.toString();
+
+                _output = _output.match( relativePath )[0].slice(1);
+                
                 var updateCont = originCont.replace(cssReg, '\r\n#set($cssList = ["' + _output + '"])\r\n');
 
                 var fileBuf = new Buffer(updateCont);

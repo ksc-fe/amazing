@@ -3,7 +3,6 @@
  * author：kreding
  * date: 2014-09-15
  */
-
 var path = require('path');
 var fs = require('fs');
 var crypto = require('crypto');
@@ -21,10 +20,13 @@ var jsReg = /\s*#set\s*\(\s*\$jsList\s*=\s*\[\s*"\s*([\/]?[.\w-]+)([\/][.\w-]+)*
 // 引入css文件的指令正则
 var cssReg = /\s*#set\s*\(\s*\$cssList\s*=\s*\[\s*"\s*([\/]?[.\w-]+)([\/][.\w-]+)*\s*"\s*(,\s*"\s*([\/]?[.\w-]+)([\/][.\w-]+)*\s*"\s*)*\s*\]\s*\)\s*/i;
 // velocity指令中的文件提取正则
-var fileReg = /\s*([\/]?[.\w-]+)([\/][.\w-]+)*\s*/g
+var fileReg = /\s*([\/]?[.\w-]+)([\/][.\w-]+)*\s*/g;
+// 相对于站点根路径的相对路径
+var relativePath = /\/pkg\/.*/i;
 var baseJsPath = path.resolve('../console/fe-source/resources/js') + '/';
 var baseCssPath = path.resolve('../console/fe-source/resources/css') + '/';
-var output = path.resolve('../console/fe-source/resources/pkg') + '/'
+var output = path.resolve('../console/fe-source/resources/pkg') + '/';
+
 
 // 遍历指定目录的文件
 ndir.walk(resourceDir, function onDir(dirpath, files) {
@@ -45,6 +47,8 @@ ndir.walk(resourceDir, function onDir(dirpath, files) {
 // 逐行读取内容，并获取静态资源文件列表
 function readLine( file ){
     var lineNumber = 0;
+
+    // 逐行读取文件
     var that = ndir.createLineReader( file ).on('line', function(line) {
         var curLineStr = line.toString();
         var fileType = null;
@@ -58,7 +62,7 @@ function readLine( file ){
             return;   
         }
 
-        // 提取需要打包的资源
+        // 提取需要打包的资源路径
         var fileList = originFileStr[0].match(fileReg).slice(2);
         var absolutePaths = [];
 
@@ -92,6 +96,8 @@ function readLine( file ){
                     newOutput = curOutput.replace( t.getTime()+'', digest );
 
                     fs.renameSync( curOutput, newOutput );
+
+                    newOutput = newOutput.match( relativePath )[0].slice(1);
 
                     var originCont = data.toString();
                     var updateCont = originCont.replace(jsReg, '\r\n#set($jsList = ["' + newOutput + '"])\r\n');
