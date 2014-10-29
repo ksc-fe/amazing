@@ -1,0 +1,6 @@
+{
+    "project": "ksc",
+    "sourceFolder": "source",
+    "releaseFolder": "webRoot",
+    "port": 9090
+}

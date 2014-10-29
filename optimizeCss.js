@@ -4,6 +4,7 @@
 var fs = require('fs');
 var path = require('path');
 
+var log = require('color-log');
 var spriter = require('ispriter');
 var compressor = require('yuicompressor');
 var ndir = require('ndir');
@@ -29,8 +30,8 @@ var packageCss = function( cssArr, file ) {
         if(err) throw err;
         fs.writeFile(output, cssArr, function(err){
             if(err) throw err;
-            console.log('Write ' + output + ' success!')
-            spriteConfig.output.combine = md5Part + '.min1.css'
+            // log.info('YUI生成临时文件 ' + output + ' 成功!');
+            spriteConfig.output.combine = md5Part + '.min.css'
 
             spriter.merge(spriteConfig, function(){
                 var _basePath = path.resolve('../console/fe-source/resources/pkg/c') + '/';
@@ -44,7 +45,7 @@ var packageCss = function( cssArr, file ) {
                 var fileBuf = new Buffer(updateCont);
                 fs.writeFile(file, fileBuf, function(err){
                     if(err) throw err;
-                    console.log('Write ' + file + ' success')
+                    log.info('*** 完成CSS地址替换: ' + file);
                 })
             });
         })

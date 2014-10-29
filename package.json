@@ -9,6 +9,7 @@
     "ispriter":"*",
     "commander":"*",
     "graceful-fs": "*",
+    "color-log": "*",
     "ndir": "~0.1.5"
   },
   "devDependencies": {},

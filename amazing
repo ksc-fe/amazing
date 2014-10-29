@@ -10,9 +10,16 @@ var tools = require('./tools');
 
 var exec = child_process.exec;
 
-var base = './';
-var root = '../console/fe-source';
-var port = '9090';
+var conf = {
+    project: "console",
+    sourceFolder: "fe-source",
+    releaseFolder: "webapp",
+    port: 9090
+}
+
+// var root = '../console/fe-source';
+// var port = '9090';
+
 
 function setRoot( val ){
     root = val;
@@ -22,9 +29,22 @@ function setPort( val ){
     port = val;
 }
 
+function setConfig( config ) {
+    var configPath = './conf/' + config + '.json';
+    var newConf = require( configPath );
+
+    // 覆写默认配置
+    for ( item in newConf ){
+        conf[item] = newConf[item];
+    }
+}
+
 function startServer(){
-    var startSerCommond = 'java -jar  ./libs/server.jar --base ' + base + '  --root ' + root + ' --port ' + port;
+    var root = '../' + conf.project + '/' + conf.sourceFolder;
+    var port = conf.port;
+    var startSerCommond = 'java -jar  ./libs/server.jar --base ./ --root ' + root + ' --port ' + port;
     console.log('* Server is starting , port is ' + port);
+
     var server = exec(startSerCommond, function( err, stdout, stderr ){
         if(err) 
             console.log('* 服务器启动失败！', err);
@@ -32,21 +52,27 @@ function startServer(){
         console.log('* Congratulation, 服务器启动成功!');
         console.log('* PID: ', server.pid)
     })
+    
+    setTimeout(function() {
+        console.log('* PID: ', server.pid);
+    }, 500);
 }
 
 function copySource() {
+    var release = '../' + conf.project + '/' + conf.releaseFolder;
+
     console.log('开始复制css...');
-    tools.copy( '../console/fe-source/resources/css', '../console/webapp/resources/css' );
+    tools.copy( root + '/resources/css', release + '/resources/css' );
     console.log('已经成功完成css的复制。')
     console.log('开始复制js...');
-    tools.copy( '../console/fe-source/resources/js', '../console/webapp/resources/js' );
+    tools.copy( root + '/resources/js', release + '/resources/js' );
     console.log('已经成功完成js的复制。')
     console.log('开始复制图片...');
-    tools.copy( '../console/fe-source/resources/images', '../console/webapp/resources/images' );
+    tools.copy( root + '/resources/images', release + '/resources/images' );
     console.log('已经成功完成图片的复制。')
     console.log('开始复制模板...');
-    tools.copy( '../console/fe-source/view', '../console/webapp/view' );
-    console.log('已经成功完成模板的复制。')
+    tools.copy( root + '/view', release + '/view' );
+    console.log('已经成功完成模板的复制。');
 }
 
 program
@@ -56,8 +82,9 @@ program
     .option('-r, --root <path>', '指定web应用的加载路径', setRoot)
     .option('-p, --port <num>', '指定服务启动端口', setPort)
     .option('-c, --copy', '复制fe-source中的静态资源到webapp中', copySource)
+    .option('-t, --task <config>', '指定服务器启动的配置文件名(即conf下的文件名，不加后缀)', setConfig)
     .parse(process.argv);
 
-if(program.server && ( program.root || program.port || ( !program.root && !program.port ) ) ) {
+if(program.server && ( program.root || program.port || ( !program.root && !program.port ) || program.task ) ) {
     startServer();
 }
