@@ -1,0 +1,6 @@
+{
+    "project": "ksyun",
+    "sourceFolder": "fe-source",
+    "releaseFolder": "webapp",
+    "port": 9091
+}
