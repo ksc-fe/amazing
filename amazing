@@ -3,7 +3,6 @@
 /**
 * Module dependencies.
 */
-
 var child_process = require('child_process');
 var program = require('commander');
 var tools = require('./tools');
@@ -70,6 +69,16 @@ function startServer(){
 
 function copySource() {
     var release = '../' + conf.project + '/' + conf.releaseFolder;
+    var root = '../' + conf.project + '/' + conf.sourceFolder;
+
+    // 命令行中单独指定参数的优先级高于配置文件中的参数配置
+    if( program.root ){
+        root = _root;
+    }
+
+    if( program.port ){
+        port = _port;
+    }
 
     console.log('开始复制css...');
     tools.copy( root + '/resources/css', release + '/resources/css' );
@@ -95,6 +104,10 @@ program
     .option('-t, --task <config>', '指定服务器启动的配置文件名(即conf下的文件名，不加后缀)', setConfig)
     .parse(process.argv);
 
-if(program.server && ( program.root || program.port || ( !program.root && !program.port ) || program.task ) ) {
+if(program.server) {
     startServer();
 }
+
+// if(program.copy){
+//     copySource();
+// }
