@@ -10,7 +10,11 @@ var log = require('color-log');
 var optimizeJs = require('./optimizeJs').compressJs;
 var optimizeCss = require('./optimizeCss').compressCss;
 
-var resourceDir = '../console/fe-source/view/cdn';
+var project = 'console';
+var release = 'webapp';
+var relativePath = '../'+ project +'/' + release;
+
+var resourceDir = relativePath + '/view/cdn';
 // 引入js文件的指令正则
 var jsReg = /\s*#set\s*\(\s*\$jsList\s*=\s*\[\s*"\s*([\/]?[.\w-]+)([\/][.\w-]+)*\s*"\s*(,\s*"\s*([\/]?[.\w-]+)([\/][.\w-]+)*\s*"\s*)*\s*\]\s*\)\s*/i;
 // 引入css文件的指令正则
@@ -19,8 +23,8 @@ var cssReg = /\s*#set\s*\(\s*\$cssList\s*=\s*\[\s*"\s*([\/]?[.\w-]+)([\/][.\w-]+
 var fileReg = /\s*([\/]?[.\w-]+)([\/][.\w-]+)*\s*/g;
 // 打包之后的文件路径正则
 var pkgReg = /^(pkg\/)[jc]\/.*(.min.(j|(cs))s)$/g;
-var baseJsPath = path.resolve('../console/fe-source/resources/js') + '/';
-var baseCssPath = path.resolve('../console/fe-source/resources/css') + '/';
+var baseJsPath = path.resolve(relativePath + '/resources/js') + '/';
+var baseCssPath = path.resolve(relativePath + '/resources/css') + '/';
 
 // 遍历指定目录的文件
 ndir.walk(resourceDir, function onDir(dirpath, files) {
@@ -59,6 +63,7 @@ function readLine( file ){
         var len = fileList.length;
         var absolutePaths = [];
 
+        // 文件数量为1并且 以pkg/j(或pkg/c)开头，以.mim.js结尾的文件忽略掉
         if(1 == len && fileList[0].match(pkgReg)){
             log.info('>>> ' + fileList[0] + ' 是打包过的文件，跳过.')
             return;

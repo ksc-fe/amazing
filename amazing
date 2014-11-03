@@ -19,7 +19,6 @@ var conf = {
 var _root = '../console/fe-source';
 var _port = '9090';
 
-
 function setRoot( val ){
     _root = val;
 }
