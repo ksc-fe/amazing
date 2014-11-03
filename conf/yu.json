@@ -1,6 +1,0 @@
-{
-    "project": "console",
-    "sourceFolder": "fe-source",
-    "releaseFolder": "webapp",
-    "port": 9090
-}
