@@ -19,7 +19,6 @@ var conf = {
 var _root = '../console/fe-source';
 var _port = '9090';
 
-
 function setRoot( val ){
     _root = val;
 }
@@ -79,6 +78,9 @@ function copySource() {
     if( program.port ){
         port = _port;
     }
+    console.log('源目录: ', root);
+    console.log('目标目录: ', release);
+    console.log('***********************')
 
     console.log('开始复制css...');
     tools.copy( root + '/resources/css', release + '/resources/css' );
@@ -105,7 +107,7 @@ program
     .option('-s, --server', '启动web服务器')
     .option('-r, --root <path>', '指定web应用的加载路径', setRoot)
     .option('-p, --port <num>', '指定服务启动端口', setPort)
-    .option('-c, --copy', '复制fe-source中的静态资源到webapp中', copySource)
+    .option('-c, --copy', '复制fe-source中的静态资源到webapp中')
     .option('-t, --task <config>', '指定服务器启动的配置文件名(即conf下的文件名，不加后缀)', setConfig)
     .option('-y, --sync <config>', '同步源文件至指定路径，需指定配置文件(同task)', syncSource)
     .parse(process.argv);
@@ -114,6 +116,6 @@ if(program.server) {
     startServer();
 }
 
-// if(program.copy){
-//     copySource();
-// }
+if(program.copy) {
+    copySource();
+}

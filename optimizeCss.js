@@ -10,9 +10,13 @@ var compressor = require('yuicompressor');
 var ndir = require('ndir');
 var md5 = require('./tools').md5;
 
+var project = 'console';
+var release = 'webapp';
+var _relativePath = '../'+ project +'/' + release;
+
 var cssReg = /\s*#set\s*\(\s*\$cssList\s*=\s*\[\s*"\s*([\/]?[.\w-]+)([\/][.\w-]+)*\s*"\s*(,\s*"\s*([\/]?[.\w-]+)([\/][.\w-]+)*\s*"\s*)*\s*\]\s*\)\s*/i;
 var relativePath = /\/pkg\/.*/i;
-var basePath = path.resolve('../console/fe-source/resources') + '/';
+var basePath = path.resolve( _relativePath + '/resources') + '/';
 var cssArr = [];
 var spriteConfig = require('./sprite-config.json');
 
@@ -34,7 +38,7 @@ var packageCss = function( cssArr, file ) {
             spriteConfig.output.combine = md5Part + '.min.css'
 
             spriter.merge(spriteConfig, function(){
-                var _basePath = path.resolve('../console/fe-source/resources/pkg/c') + '/';
+                var _basePath = path.resolve( relativePath + '/resources/pkg/c') + '/';
                 var _output = _basePath + md5Part + '.min.css';
                 var originCont = data.toString();
 

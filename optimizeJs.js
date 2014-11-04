@@ -5,10 +5,15 @@ var fs = require('fs');
 var path = require('path');
 var child_process = require('child_process');
 var crypto = require('crypto');
+var log = require('color-log');
+
+var project = 'console';
+var release = 'webapp';
+var relativePath = '../'+ project +'/' + release;
 
 var exec = child_process.exec;
 var uglifyjs = './node_modules/.bin/uglifyjs ';
-var output = path.resolve('../console/fe-source/resources/pkg') + '/';
+var output = path.resolve( relativePath + '/resources/pkg') + '/';
 
 // 相对于站点根路径的相对路径
 var relativePath = /\/pkg\/.*/i;
@@ -43,7 +48,8 @@ function compressJs( absolutePaths, file ){
                 var fileBuf = new Buffer(updateCont);
                 fs.writeFile(file, fileBuf, function(err){
                     if(err) throw err;
-                    console.log('Write ' + file + ' success')
+                    // console.log('Write ' + file + ' success')
+                    log.info('*** 完成JS地址替换: ' + file);
                 })
             })
             
