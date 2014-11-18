@@ -2,5 +2,10 @@
     "project": "console",
     "sourceFolder": "fe-source",
     "releaseFolder": "webapp",
-    "port": 9090
+    "port": 9090,
+    "exclude": [
+    	"webapp/view/velocity",
+	    "webapp/view/inc",
+	    "webapp/view/test"
+    ]
 }

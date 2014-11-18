@@ -6,6 +6,7 @@
 var child_process = require('child_process');
 var program = require('commander');
 var tools = require('./tools');
+var release = require('./release');
 
 var exec = child_process.exec;
 
@@ -13,7 +14,8 @@ var conf = {
     project: "console",
     sourceFolder: "fe-source",
     releaseFolder: "webapp",
-    port: 9090
+    port: 9090,
+    exclude:[]
 }
 
 var _root = '../console/fe-source';
@@ -104,6 +106,7 @@ program
     .option('-p, --port <num>', '指定服务启动端口', setPort)
     .option('-c, --copy', '复制fe-source中的静态资源到webapp中')
     .option('-t, --task <config>', '指定服务器启动的配置文件名(即conf下的文件名，不加后缀)', setConfig)
+    .option('release, --release', '优化静态资源(css, js以及image)')
     .parse(process.argv);
 
 if(program.server) {
@@ -112,4 +115,12 @@ if(program.server) {
 
 if(program.copy) {
     copySource();
+}
+
+if(program.release) {
+    release.start({
+        project: conf.project,
+        release: conf.releaseFolder,
+        exclude: conf.exclude
+    })
 }

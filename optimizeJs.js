@@ -7,20 +7,20 @@ var child_process = require('child_process');
 var crypto = require('crypto');
 var log = require('color-log');
 
-var project = 'console';
-var release = 'webapp';
-var relativePath = '../'+ project +'/' + release;
-
 var exec = child_process.exec;
 var uglifyjs = './node_modules/.bin/uglifyjs ';
-var output = path.resolve( relativePath + '/resources/pkg') + '/';
 
 // 相对于站点根路径的相对路径
 var relativePath = /\/pkg\/.*/i;
 // 引入js文件的指令正则
 var jsReg = /\s*#set\s*\(\s*\$jsList\s*=\s*\[\s*"\s*([\/]?[.\w-]+)([\/][.\w-]+)*\s*"\s*(,\s*"\s*([\/]?[.\w-]+)([\/][.\w-]+)*\s*"\s*)*\s*\]\s*\)\s*/i;
 
-function compressJs( absolutePaths, file ){
+function compressJs( absolutePaths, file, opt ){
+    var project = opt.project;
+    var release = opt.release;
+    var _relativePath = '../'+ project +'/' + release;
+    var output = path.resolve( _relativePath + '/resources/pkg') + '/';
+
     // 为打包后的文件添加时间戳
     var t = new Date();
     var curOutput = output + 'j/' + t.getTime() + '.min.js'

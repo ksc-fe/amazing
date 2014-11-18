@@ -10,11 +10,6 @@ var log = require('color-log');
 var optimizeJs = require('./optimizeJs').compressJs;
 var optimizeCss = require('./optimizeCss').compressCss;
 
-var project = 'console';
-var release = 'webapp';
-var relativePath = '../'+ project +'/' + release;
-
-var resourceDir = relativePath + '/view/cdn';
 // 引入js文件的指令正则
 var jsReg = /\s*#set\s*\(\s*\$jsList\s*=\s*\[\s*"\s*([\/]?[.\w-]+)([\/][.\w-]+)*\s*"\s*(,\s*"\s*([\/]?[.\w-]+)([\/][.\w-]+)*\s*"\s*)*\s*\]\s*\)\s*/i;
 // 引入css文件的指令正则
@@ -23,26 +18,59 @@ var cssReg = /\s*#set\s*\(\s*\$cssList\s*=\s*\[\s*"\s*([\/]?[.\w-]+)([\/][.\w-]+
 var fileReg = /\s*([\/]?[.\w-]+)([\/][.\w-]+)*\s*/g;
 // 打包之后的文件路径正则
 var pkgReg = /^(pkg\/)[jc]\/.*(.min.(j|(cs))s)$/g;
+
+var project = 'console';
+var release = 'webapp';
+var excludeArr = [];
+var relativePath = '../'+ project +'/' + release;
+var resourceDir = relativePath + '/view';
 var baseJsPath = path.resolve(relativePath + '/resources/js') + '/';
 var baseCssPath = path.resolve(relativePath + '/resources/css') + '/';
 
-// 遍历指定目录的文件
-ndir.walk(resourceDir, function onDir(dirpath, files) {
-  for (var i = 0, l = files.length; i < l; i++) {
-    var info = files[i];
-    if (info[1].isFile()) {
-      readLine( info[0] );
-    }
-  }
-}, function end() {
-  // log.info('walk end.');
-}, function error(err, errPath) {
-  log.error('%s error: %s', errPath, err);
-});
+function releaseResource( base ) {
+    console.log('>>> Base conf: ', base);
+    project = base.project;
+    release = base.release;
+    relativePath = '../'+ project +'/' + release;
+    resourceDir = relativePath + '/view';
+    excludeArr = base.exclude;
+    baseJsPath = path.resolve(relativePath + '/resources/js') + '/';
+    baseCssPath = path.resolve(relativePath + '/resources/css') + '/';
+
+    // 遍历指定目录的文件
+    ndir.walk(resourceDir, function onDir(dirpath, files) {
+      if( isExclude( dirpath ) ) return;
+
+      for (var i = 0, l = files.length; i < l; i++) {
+        var info = files[i];
+        if (info[1].isFile()) {
+          readLine( info[0] );
+        }
+      }
+    }, function end() {
+      // log.info('walk end.');
+    }, function error(err, errPath) {
+      log.error('%s error: %s', errPath, err);
+    });
+}
+
+function isExclude( dir ){
+    for (var n = excludeArr.length - 1; n >= 0; n--) {
+        if( -1 !== (dir + '/').indexOf( excludeArr[n] ) ){
+            return true;
+        }
+    };
+
+    return false;
+}
 
 // 逐行读取内容，并获取静态资源文件列表
 function readLine( file ){
     var lineNumber = 0;
+    var opt = {
+        project: project,
+        release: release
+    }
 
     // 逐行读取文件
     ndir.createLineReader( file ).on('line', function(line) {
@@ -77,14 +105,19 @@ function readLine( file ){
 
         if( fileType === 'css' ) {
             // 优化打包Css
-            optimizeCss( absolutePaths, file );
+            optimizeCss( absolutePaths, file, opt );
         }else{
             // 优化打包Js
-            optimizeJs( absolutePaths, file );
+            optimizeJs( absolutePaths, file, opt );
         }
     }).on('end', function() {
       // log.info('read a file done.')
     }).on('error', function(err) {
       log.error('error: ', err.message);
     });
+}
+
+// export.compressJs = compressJs;
+module.exports = {
+    start: releaseResource
 }

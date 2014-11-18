@@ -9,18 +9,17 @@ var spriter = require('ispriter');
 var compressor = require('yuicompressor');
 var ndir = require('ndir');
 var md5 = require('./tools').md5;
-
-var project = 'console';
-var release = 'webapp';
-var _relativePath = '../'+ project +'/' + release;
+var spriteConfig = require('./sprite-config.json');
 
 var cssReg = /\s*#set\s*\(\s*\$cssList\s*=\s*\[\s*"\s*([\/]?[.\w-]+)([\/][.\w-]+)*\s*"\s*(,\s*"\s*([\/]?[.\w-]+)([\/][.\w-]+)*\s*"\s*)*\s*\]\s*\)\s*/i;
 var relativePath = /\/pkg\/.*/i;
-var basePath = path.resolve( _relativePath + '/resources') + '/';
 var cssArr = [];
-var spriteConfig = require('./sprite-config.json');
 
-var packageCss = function( cssArr, file ) {
+var packageCss = function( cssArr, file, opt ) {
+    var project = opt.project;
+    var release = opt.release;
+    var _relativePath = '../'+ project +'/' + release;
+    var basePath = path.resolve( _relativePath + '/resources') + '/';
     var md5Part = md5( cssArr.toString() ).slice(0, 10) 
     var output = basePath + 'temp/' + md5Part + '.min.css';
 
@@ -57,7 +56,7 @@ var packageCss = function( cssArr, file ) {
     
 }
 
-var compressCss = function( cssList, file ){
+var compressCss = function( cssList, file, opt ){
     if(!cssList | cssList.length < 1) return;
 
     var len = cssList.length;
@@ -70,7 +69,7 @@ var compressCss = function( cssList, file ){
             cssArr.push( data );
 
             if( cssArr.length === len ) {
-                packageCss( cssArr, file );
+                packageCss( cssArr, file, opt );
             }
         });
     }
