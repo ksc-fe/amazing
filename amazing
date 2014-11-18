@@ -98,6 +98,40 @@ function copySource() {
     console.log('已经成功完成模板的复制。');
 }
 
+
+function syncSource(){
+    var release = '../' + conf.project + '/' + conf.releaseFolder;
+    var root = '../' + conf.project + '/' + conf.sourceFolder;
+
+    // 命令行中单独指定参数的优先级高于配置文件中的参数配置
+    if( program.root ){
+        root = _root;
+    }
+
+    if( program.port ){
+        port = _port;
+    }
+    console.log('源目录: ', root);
+    console.log('目标目录: ', release);
+    console.log('***********************')
+
+    console.log('开始复制css...');
+    tools.copy( root + '/resources/css', release + '/resources/css' );
+    console.log('已经成功完成css的复制。')
+    console.log('开始复制js...');
+    tools.copy( root + '/resources/js', release + '/resources/js' );
+    console.log('已经成功完成js的复制。')
+    console.log('开始复制图片...');
+    tools.copy( root + '/resources/images', release + '/resources/images' );
+    console.log('已经成功完成图片的复制。')
+    console.log('开始复制模板...');
+    tools.copy( root + '/view', release + '/view' );
+    console.log('已经成功完成模板的复制。');
+
+    // 提交至git
+    process.exec("");
+}
+
 program
     .version('0.0.1')
     .usage('[options] <file ...>')
@@ -107,6 +141,7 @@ program
     .option('-c, --copy', '复制fe-source中的静态资源到webapp中')
     .option('-t, --task <config>', '指定服务器启动的配置文件名(即conf下的文件名，不加后缀)', setConfig)
     .option('release, --release', '优化静态资源(css, js以及image)')
+    .option('-y, --sync <config>', '同步源文件至指定路径，需指定配置文件(同task)')
     .parse(process.argv);
 
 if(program.server) {
@@ -122,5 +157,7 @@ if(program.release) {
         project: conf.project,
         release: conf.releaseFolder,
         exclude: conf.exclude
-    })
+})
+if(program.sync) {
+    syncSource();
 }
