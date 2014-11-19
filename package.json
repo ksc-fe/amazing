@@ -6,7 +6,7 @@
   "dependencies": {
     "uglify-js": "*",
     "yuicompressor": "*",
-    "ispriter":"*",
+    "imerge":"*",
     "commander":"*",
     "graceful-fs": "*",
     "color-log": "*",

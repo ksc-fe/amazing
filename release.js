@@ -7,6 +7,7 @@ var path = require('path');
 
 var ndir = require('ndir');
 var log = require('color-log');
+var IMerge = require('imerge');
 var optimizeJs = require('./optimizeJs').compressJs;
 var optimizeCss = require('./optimizeCss').compressCss;
 
@@ -23,12 +24,24 @@ var project = 'console';
 var release = 'webapp';
 var excludeArr = [];
 var relativePath = '../'+ project +'/' + release;
-var resourceDir = relativePath + '/view';
+var resourceDir = relativePath + '/view/rds';
 var baseJsPath = path.resolve(relativePath + '/resources/js') + '/';
 var baseCssPath = path.resolve(relativePath + '/resources/css') + '/';
 
+function init( base ){
+    new IMerge({
+        from: baseCssPath,
+        to: baseCssPath
+    }).start()
+        .then(function() {
+            log.info('>>> 完成雪碧图合并以及相关的资源地址替换.');
+            releaseResource( base );
+        }).catch(function(err) {
+            log.error(">>> 合并雪碧图出错：" , err);
+        });
+}
+
 function releaseResource( base ) {
-    console.log('>>> Base conf: ', base);
     project = base.project;
     release = base.release;
     relativePath = '../'+ project +'/' + release;
@@ -119,5 +132,5 @@ function readLine( file ){
 
 // export.compressJs = compressJs;
 module.exports = {
-    start: releaseResource
+    start: init
 }

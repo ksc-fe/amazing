@@ -1,5 +1,5 @@
 {
-	"workspace": "../console/webapp",
+	"workspace": "../console/webapp/",
 	"input": {
 		"cssSource": ["./resources/temp/**.css"],
 		"format": "png"

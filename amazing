@@ -157,7 +157,8 @@ if(program.release) {
         project: conf.project,
         release: conf.releaseFolder,
         exclude: conf.exclude
-})
+    })
+}
 if(program.sync) {
     syncSource();
 }
