@@ -1,0 +1,164 @@
+#!/usr/bin/env node
+
+/**
+* Module dependencies.
+*/
+var child_process = require('child_process');
+var program = require('commander');
+var tools = require('./tools');
+var release = require('./release');
+
+var exec = child_process.exec;
+
+var conf = {
+    project: "console",
+    sourceFolder: "fe-source",
+    releaseFolder: "webapp",
+    port: 9090,
+    exclude:[]
+}
+
+var _root = '../console/fe-source';
+var _port = '9090';
+
+function setRoot( val ){
+    _root = val;
+}
+
+function setPort( val ){
+    _port = val;
+}
+
+function setConfig( config ) {
+    var configPath = './conf/' + config + '.json';
+    var newConf = require( configPath );
+
+    // 覆写默认配置
+    for ( item in newConf ){
+        conf[item] = newConf[item];
+    }
+}
+
+function startServer(){
+    var root = '../' + conf.project + '/' + conf.sourceFolder;
+    var port = conf.port;
+
+    // 命令行中单独指定参数的优先级高于配置文件中的参数配置
+    if( program.root ){
+        root = _root;
+    }
+
+    if( program.port ){
+        port = _port;
+    }
+
+    var startSerCommond = 'java -jar  ./libs/server.jar --base ./ --root ' + root + ' --port ' + port;
+    console.log('* Server is starting , port is ' + port);
+
+    var server = exec(startSerCommond, function( err, stdout, stderr ){
+        if(err) 
+            console.log('* 服务器启动失败！', err);
+            throw err;
+        console.log('* Congratulation, 服务器启动成功!');
+        console.log('* PID: ', server.pid)
+    })
+
+    setTimeout(function() {
+        console.log('* PID: ', server.pid);
+    }, 500);
+}
+
+function copySource() {
+    var release = '../' + conf.project + '/' + conf.releaseFolder;
+    var root = '../' + conf.project + '/' + conf.sourceFolder;
+
+    // 命令行中单独指定参数的优先级高于配置文件中的参数配置
+    if( program.root ){
+        root = _root;
+    }
+
+    if( program.port ){
+        port = _port;
+    }
+    console.log('源目录: ', root);
+    console.log('目标目录: ', release);
+    console.log('***********************')
+
+    console.log('开始复制css...');
+    tools.copy( root + '/resources/css', release + '/resources/css' );
+    console.log('已经成功完成css的复制。')
+    console.log('开始复制js...');
+    tools.copy( root + '/resources/js', release + '/resources/js' );
+    console.log('已经成功完成js的复制。')
+    console.log('开始复制图片...');
+    tools.copy( root + '/resources/images', release + '/resources/images' );
+    console.log('已经成功完成图片的复制。')
+    console.log('开始复制模板...');
+    tools.copy( root + '/view', release + '/view' );
+    console.log('已经成功完成模板的复制。');
+}
+
+
+function syncSource(){
+    var release = '../' + conf.project + '/' + conf.releaseFolder;
+    var root = '../' + conf.project + '/' + conf.sourceFolder;
+
+    // 命令行中单独指定参数的优先级高于配置文件中的参数配置
+    if( program.root ){
+        root = _root;
+    }
+
+    if( program.port ){
+        port = _port;
+    }
+    console.log('源目录: ', root);
+    console.log('目标目录: ', release);
+    console.log('***********************')
+
+    console.log('开始复制css...');
+    tools.copy( root + '/resources/css', release + '/resources/css' );
+    console.log('已经成功完成css的复制。')
+    console.log('开始复制js...');
+    tools.copy( root + '/resources/js', release + '/resources/js' );
+    console.log('已经成功完成js的复制。')
+    console.log('开始复制图片...');
+    tools.copy( root + '/resources/images', release + '/resources/images' );
+    console.log('已经成功完成图片的复制。')
+    console.log('开始复制模板...');
+    tools.copy( root + '/view', release + '/view' );
+    console.log('已经成功完成模板的复制。');
+
+    // 提交至git
+    process.exec("");
+}
+
+program
+    .version('0.0.1')
+    .usage('[options] <file ...>')
+    .option('-s, --server', '启动web服务器')
+    .option('-r, --root <path>', '指定web应用的加载路径', setRoot)
+    .option('-p, --port <num>', '指定服务启动端口', setPort)
+    .option('-c, --copy', '复制fe-source中的静态资源到webapp中')
+    .option('-t, --task <config>', '指定服务器启动的配置文件名(即conf下的文件名，不加后缀)', setConfig)
+    .option('release, --release', '优化静态资源(css, js以及image)')
+    .option('-y, --sync <config>', '同步源文件至指定路径，需指定配置文件(同task)')
+    .parse(process.argv);
+
+if(program.server) {
+    startServer();
+}
+
+if(program.copy) {
+    copySource();
+}
+
+if(program.release) {
+    release.start({
+        project: conf.project,
+        release: conf.releaseFolder,
+        exclude: conf.exclude
+    })
+}
+if(program.sync) {
+    syncSource();
+}
