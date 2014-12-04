@@ -12,8 +12,8 @@ var spriteConfig = require('./sprite-config.json');
 
 var cssReg = /\s*#set\s*\(\s*\$cssList\s*=\s*\[\s*"\s*([\/]?[.\w-]+)([\/][.\w-]+)*\s*"\s*(,\s*"\s*([\/]?[.\w-]+)([\/][.\w-]+)*\s*"\s*)*\s*\]\s*\)\s*/i;
 var relativePath = /\/pkg\/.*/i;
-var _relativePath = '';
 var md5Part = '';
+var options = null;
 
 // 替换资源地址
 var replacePath = function( file ){
@@ -21,13 +21,12 @@ var replacePath = function( file ){
         if(err) throw err;
         spriteConfig.output.combine = md5Part + '.min.css'
 
-        var _basePath = path.resolve( _relativePath + '/resources/pkg/c') + '/';
-        var _output = _basePath + md5Part + '.min.css';
+        var output = options.cssDest + md5Part + '.min.css';
         var originCont = data.toString();
 
-        _output = _output.match( relativePath )[0].slice(1);
+        output = output.match( relativePath )[0].slice(1);
 
-        var updateCont = originCont.replace(cssReg, '\r\n#set($cssList = ["' + _output + '"])\r\n');
+        var updateCont = originCont.replace(cssReg, '\r\n#set($cssList = ["' + output + '"])\r\n');
 
         fs.writeFile(file, new Buffer(updateCont), function(err){
             if(err) throw err;
@@ -39,10 +38,8 @@ var replacePath = function( file ){
 var compressCss = function( cssList, file, opt ){
     if(!cssList | cssList.length < 1) return;
 
+    options = opt;
     var cssArr = [];
-    var project = opt.project;
-    var release = opt.release;
-    _relativePath = '../'+ project +'/' + release;
 
     cssList.forEach(function( css ){
         cssArr.push( fs.readFileSync( css ) );
@@ -54,8 +51,7 @@ var compressCss = function( cssList, file, opt ){
         type: 'css'
     }, function(err, data, extra){
         md5Part = md5( data ).slice(0, 10);
-        var basePath = path.resolve( _relativePath + '/resources') + '/';
-        var output = basePath + 'pkg/c/' + md5Part + '.min.css';
+        var output = options.cssDest + md5Part + '.min.css';
         
         fs.writeFileSync( output, new Buffer( data ) );
         replacePath( file );

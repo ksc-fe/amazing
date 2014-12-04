@@ -7,6 +7,7 @@ var path = require('path');
 
 var ndir = require('ndir');
 var log = require('color-log');
+var _ = require('lodash');
 var IMerge = require('imerge');
 var optimizeJs = require('./optimizeJs').compressJs;
 var optimizeCss = require('./optimizeCss').compressCss;
@@ -20,38 +21,51 @@ var fileReg = /\s*([\/]?[.\w-]+)([\/][.\w-]+)*\s*/g;
 // 打包之后的文件路径正则
 var pkgReg = /^(pkg\/)[jc]\/.*(.min.(j|(cs))s)$/g;
 
-var project = 'console';
-var release = 'webapp';
-var excludeArr = [];
-var relativePath = '../'+ project +'/' + release;
-var resourceDir = relativePath + '/view/rds';
-var baseJsPath = path.resolve(relativePath + '/resources/js') + '/';
-var baseCssPath = path.resolve(relativePath + '/resources/css') + '/';
+var defaultOptions = {
+    project : 'console',
+    release : 'webapp',
+    static : 'resources',
+    exclude : []
+};
+var options = null;
 
-function init( base ){
+function init( customize ){
+    options = assignOptions( _.assign( defaultOptions, customize ) );
+    console.log('options: ', options);
+
     new IMerge({
-        from: baseCssPath,
-        to: baseCssPath
+        from: options.baseCssPath,
+        to: options.baseCssPath
     }).start()
         .then(function() {
             log.info('>>> 完成雪碧图合并以及相关的资源地址替换.');
-            releaseResource( base );
+            releaseResource();
         }).catch(function(err) {
             log.error(">>> 合并雪碧图出错：" , err);
         });
 }
 
-function releaseResource( base ) {
-    project = base.project;
-    release = base.release;
-    relativePath = '../'+ project +'/' + release;
-    resourceDir = relativePath + '/view';
-    excludeArr = base.exclude;
-    baseJsPath = path.resolve(relativePath + '/resources/js') + '/';
-    baseCssPath = path.resolve(relativePath + '/resources/css') + '/';
+function assignOptions( options ){
+    options.relativePath = '../'+ options.project +'/' + options.release;
+    options.resourceDir = options.relativePath + '/view/rds';
+    options.baseJsPath = path.resolve(options.relativePath + '/' + options.static + '/js') + '/';
+    options.baseCssPath = path.resolve(options.relativePath + '/' + options.static + '/css') + '/';
+    options.jsDest = options.relativePath + '/' + options.static + '/pkg/j/';
+    options.cssDest = options.relativePath + '/' + options.static + '/pkg/c/';
+    return options;
+}
+
+function releaseResource() {
+    // project = base.project;
+    // release = base.release;
+    // relativePath = '../'+ project +'/' + release;
+    // resourceDir = relativePath + '/view';
+    // exclude = base.exclude;
+    // baseJsPath = path.resolve(relativePath + '/' + base.static + '/js') + '/';
+    // baseCssPath = path.resolve(relativePath + '/' + base.static + '/css') + '/';
 
     // 遍历指定目录的文件
-    ndir.walk(resourceDir, function onDir(dirpath, files) {
+    ndir.walk(options.resourceDir, function onDir(dirpath, files) {
       if( isExclude( dirpath ) ) return;
 
       for (var i = 0, l = files.length; i < l; i++) {
@@ -68,8 +82,8 @@ function releaseResource( base ) {
 }
 
 function isExclude( dir ){
-    for (var n = excludeArr.length - 1; n >= 0; n--) {
-        if( -1 !== (dir + '/').indexOf( excludeArr[n] ) ){
+    for (var n = options.exclude.length - 1; n >= 0; n--) {
+        if( -1 !== (dir + '/').indexOf( options.exclude[n] ) ){
             return true;
         }
     };
@@ -80,10 +94,6 @@ function isExclude( dir ){
 // 逐行读取内容，并获取静态资源文件列表
 function readLine( file ){
     var lineNumber = 0;
-    var opt = {
-        project: project,
-        release: release
-    }
 
     // 逐行读取文件
     ndir.createLineReader( file ).on('line', function(line) {
@@ -111,17 +121,17 @@ function readLine( file ){
         }
 
         // 转换为绝对路径
-        var basePath = fileType === 'js' ? baseJsPath : baseCssPath;
+        var basePath = fileType === 'js' ? options.baseJsPath : options.baseCssPath;
         for(var i = 0; i < len; i++ ){
             absolutePaths.push( basePath + fileList[i] );
         }
 
         if( fileType === 'css' ) {
             // 优化打包Css
-            optimizeCss( absolutePaths, file, opt );
+            optimizeCss( absolutePaths, file, options );
         }else{
             // 优化打包Js
-            optimizeJs( absolutePaths, file, opt );
+            optimizeJs( absolutePaths, file, options );
         }
     }).on('end', function() {
       // log.info('read a file done.')

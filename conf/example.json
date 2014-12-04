@@ -2,5 +2,11 @@
     "project": "ksc",
     "sourceFolder": "source",
     "releaseFolder": "webRoot",
-    "port": 9090
+    "static": "resources",
+    "port": 9090,
+    "exclude": [
+    	"webapp/view/velocity",
+	    "webapp/view/inc",
+	    "webapp/view/test"
+    ]
 }

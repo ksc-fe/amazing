@@ -10,6 +10,7 @@
     "commander":"*",
     "graceful-fs": "*",
     "color-log": "*",
+    "lodash": "*",
     "ndir": "~0.1.5"
   },
   "devDependencies": {},

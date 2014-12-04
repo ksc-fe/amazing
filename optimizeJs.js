@@ -16,27 +16,21 @@ var relativePath = /\/pkg\/.*/i;
 var jsReg = /\s*#set\s*\(\s*\$jsList\s*=\s*\[\s*"\s*([\/]?[.\w-]+)([\/][.\w-]+)*\s*"\s*(,\s*"\s*([\/]?[.\w-]+)([\/][.\w-]+)*\s*"\s*)*\s*\]\s*\)\s*/i;
 
 function compressJs( absolutePaths, file, opt ){
-    var project = opt.project;
-    var release = opt.release;
-    var _relativePath = '../'+ project +'/' + release;
-    var output = path.resolve( _relativePath + '/resources/pkg') + '/';
-
     // 为打包后的文件添加时间戳
     var t = new Date();
-    var curOutput = output + 'j/' + t.getTime() + '.min.js'
+    var curOutput = opt.jsDest + t.getTime() + '.min.js'
     var optimizeCommond = uglifyjs + absolutePaths.join(' ') +' -o ' + curOutput + ' -c -m';
-    // console.log('Optimizing ' + fileList + ' ...');
 
     // 执行资源优化打包指令
     exec(optimizeCommond, function( err, stdout, stderr ){
         if(err) throw err;
-        // console.log("It's OK that "+ fileList)
+        
         fs.readFile(file, function( err, data ){
             if(err) throw err;
             fs.readFile( curOutput,  function(err, data1) {
                 if(err) throw err;
                 var digest = crypto.createHash('md5').update(data1.toString()).digest('hex').slice(0, 10);
-                newOutput = curOutput.replace( t.getTime()+'', digest );
+                newOutput = curOutput.replace( t.getTime() + '', digest );
 
                 fs.renameSync( curOutput, newOutput );
 
@@ -48,7 +42,6 @@ function compressJs( absolutePaths, file, opt ){
                 var fileBuf = new Buffer(updateCont);
                 fs.writeFile(file, fileBuf, function(err){
                     if(err) throw err;
-                    // console.log('Write ' + file + ' success')
                     log.info('*** 完成JS地址替换: ' + file);
                 })
             })

@@ -14,6 +14,7 @@ var conf = {
     project: "console",
     sourceFolder: "fe-source",
     releaseFolder: "webapp",
+    static: "resources",
     port: 9090,
     exclude:[]
 }
@@ -84,49 +85,17 @@ function copySource() {
     console.log('目标目录: ', release);
     console.log('***********************')
 
-    console.log('开始复制css...');
-    tools.copy( root + '/resources/css', release + '/resources/css' );
-    console.log('已经成功完成css的复制。')
-    console.log('开始复制js...');
-    tools.copy( root + '/resources/js', release + '/resources/js' );
-    console.log('已经成功完成js的复制。')
-    console.log('开始复制图片...');
-    tools.copy( root + '/resources/images', release + '/resources/images' );
-    console.log('已经成功完成图片的复制。')
-    console.log('开始复制模板...');
+    console.log('>>> 开始复制静态资源...');
+    tools.copy( root + '/' + conf.static + '/css', release + '/' + conf.static + '/css' );
+    tools.copy( root + '/' + conf.static + '/js', release + '/' + conf.static + '/js' );
+    tools.copy( root + '/' + conf.static + '/images', release + '/' + conf.static + '/images' );
     tools.copy( root + '/view', release + '/view' );
-    console.log('已经成功完成模板的复制。');
+    console.log('>>> Success! 已经成功完成模板的复制。');
 }
 
 
 function syncSource(){
-    var release = '../' + conf.project + '/' + conf.releaseFolder;
-    var root = '../' + conf.project + '/' + conf.sourceFolder;
-
-    // 命令行中单独指定参数的优先级高于配置文件中的参数配置
-    if( program.root ){
-        root = _root;
-    }
-
-    if( program.port ){
-        port = _port;
-    }
-    console.log('源目录: ', root);
-    console.log('目标目录: ', release);
-    console.log('***********************')
-
-    console.log('开始复制css...');
-    tools.copy( root + '/resources/css', release + '/resources/css' );
-    console.log('已经成功完成css的复制。')
-    console.log('开始复制js...');
-    tools.copy( root + '/resources/js', release + '/resources/js' );
-    console.log('已经成功完成js的复制。')
-    console.log('开始复制图片...');
-    tools.copy( root + '/resources/images', release + '/resources/images' );
-    console.log('已经成功完成图片的复制。')
-    console.log('开始复制模板...');
-    tools.copy( root + '/view', release + '/view' );
-    console.log('已经成功完成模板的复制。');
+    copySource()
 
     // 提交至git
     process.exec("");
@@ -156,6 +125,7 @@ if(program.release) {
     release.start({
         project: conf.project,
         release: conf.releaseFolder,
+        static: conf.static,
         exclude: conf.exclude
     })
 }

@@ -2,6 +2,7 @@
     "project": "console",
     "sourceFolder": "fe-source",
     "releaseFolder": "webapp",
+    "static": "resources",
     "port": 9090,
     "exclude": [
     	"webapp/view/velocity",
