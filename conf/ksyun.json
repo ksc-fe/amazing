@@ -2,7 +2,7 @@
     "project": "ksyun",
     "sourceFolder": "fe-source",
     "releaseFolder": "webapp",
-    "static": "resources",
+    "static": "resources/console",
     "port": 9091,
     "exclude": [
     	"webapp/view/velocity",
