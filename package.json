@@ -1,17 +1,11 @@
 {
   "name": "ksc-fe",
   "version": "0.0.1",
-  "description": "静态资源优化",
+  "description": "velocity解析环境",
   "main": "app.js",
   "dependencies": {
-    "uglify-js": "*",
-    "yuicompressor": "*",
-    "imerge":"*",
     "commander":"*",
-    "graceful-fs": "*",
-    "color-log": "*",
-    "lodash": "*",
-    "ndir": "~0.1.5"
+    "graceful-fs": "*"
   },
   "devDependencies": {},
   "scripts": {
@@ -20,6 +14,9 @@
   "keywords": [
     "fe"
   ],
+  "preferGlobal": "true",
+  "bin": { "amazing": "amazing" },
   "author": "kreding",
+  "engines": { "node": "*" },
   "license": "MIT"
 }
