@@ -6,8 +6,7 @@
 var child_process = require('child_process'),
     path = require('path'),
     program = require('commander'),
-    tools = require('./tools'),
-    release = require('./release');
+    tools = require('./tools');
 
 var exec = child_process.exec,
     conf = {
