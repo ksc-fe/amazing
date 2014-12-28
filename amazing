@@ -4,6 +4,7 @@
 * Module dependencies.
 */
 var child_process = require('child_process'),
+    fs = require('fs'),
     path = require('path'),
     program = require('commander'),
     tools = require('./tools');
@@ -39,12 +40,23 @@ function startServer(){
     }, 500);
 }
 
+function init() {
+    var webConfPath = path.resolve(__dirname + '/WEB-INF'),
+        targetPath = path.resolve('./WEB-INF');
+
+    if(!fs.existsSync( targetPath )){
+        tools.copy( webConfPath,  targetPath)    
+    }
+}
+
 program
     .version('0.0.1')
     .usage('[options] <file ...>')
-    .option('-s, --server', '启动web服务器')
+    .option('-i, --init', '初始化服务器的webapp环境', init)
     .option('-p, --port <num>', '指定服务启动端口', setPort)
     .parse(process.argv);
 
-// setConfig();
-startServer();
+if(!program.init){
+    startServer();    
+}
+

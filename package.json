@@ -12,7 +12,9 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
-    "fe"
+    "velocity",
+    "server",
+    "java"
   ],
   "preferGlobal": "true",
   "bin": { "amazing": "amazing" },
