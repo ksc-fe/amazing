@@ -6,53 +6,22 @@
 var child_process = require('child_process'),
     path = require('path'),
     program = require('commander'),
-    tools = require('./tools'),
-    release = require('./release');
+    tools = require('./tools');
 
 var exec = child_process.exec,
     conf = {
-        project: "console",
-        sourceFolder: "fe-source",
-        releaseFolder: "webapp",
-        static: "resources",
-        port: 9090,
-        exclude:[]
+        port: 9090
     },
-    _root = '../console/fe-source',
     _port = '9090';
 
-function setRoot( val ){
-    _root = val;
-}
-
 function setPort( val ){
-    _port = val;
-}
-
-function setConfig() {
-    var configPath = path.resolve( process.cwd() + '/amazing.json' );
-    var newConf = require( configPath );
-
-    // 覆写默认配置
-    for ( item in newConf ){
-        conf[item] = newConf[item];
-    }
+    conf.port = val;
 }
 
 function startServer(){
     var root = path.resolve('./');
     var port = conf.port;
     var jarPath = path.resolve(__dirname + '/libs/server.jar');
-    console.log('root: ', root)
-
-    // 命令行中单独指定参数的优先级高于配置文件中的参数配置
-    if( program.root ){
-        root = _root;
-    }
-
-    if( program.port ){
-        port = _port;
-    }
 
     var startSerCommond = 'java -jar  ' + jarPath + ' --base ./ --root ' + root + ' --port ' + port;
     console.log('* Server is starting , port is ' + port);
@@ -74,11 +43,8 @@ program
     .version('0.0.1')
     .usage('[options] <file ...>')
     .option('-s, --server', '启动web服务器')
-    .option('-r, --root <path>', '指定web应用的加载路径', setRoot)
     .option('-p, --port <num>', '指定服务启动端口', setPort)
     .parse(process.argv);
 
-if(program.server) {
-    setConfig();
-    startServer();
-}
+// setConfig();
+startServer();
