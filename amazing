@@ -24,7 +24,7 @@ function startServer(){
     var port = conf.port;
     var jarPath = path.resolve(__dirname + '/libs/server.jar');
 
-    var startSerCommond = 'java -jar  ' + jarPath + ' --base ./ --root ' + root + ' --port ' + port;
+    var startSerCommond = 'java -jar  "' + jarPath + '" --base ./ --root "' + root + '" --port ' + port;
     console.log('* Server is starting , port is ' + port);
 
     var server = exec(startSerCommond, function( err, stdout, stderr ){

@@ -3,7 +3,7 @@
 
 ### Usage
 
-1. #####全局安装amazin
+1. #####全局安装amazing
 npm install -g amazing
 
 2. #####到web工程的根目录下
